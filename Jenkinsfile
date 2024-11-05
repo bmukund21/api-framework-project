@@ -35,13 +35,20 @@ pipeline {
 
     post {
         always {
-            // Archive test results (if any) and add JUnit reports if configured
-            archiveArtifacts artifacts: 'test-results/**/*.json', allowEmptyArchive: true
-            junit 'test-results/**/*.xml'  // Adjust if XML test results are available
+            // Archive test results if the directory exists
+            script {
+                if (fileExists('test-results')) {
+                    archiveArtifacts artifacts: 'test-results/**/*.json', allowEmptyArchive: true
+                    junit 'test-results/**/*.xml'  // Publish JUnit results if they exist
+                } else {
+                    echo 'No test results found to archive.'
+                }
+            }
         }
+        
         failure {
             // Send an email notification on test failure
-            mail to: 'your-email@example.com',
+            mail to: 'bmukund.official@gmail.com',
                  subject: 'API Test Automation Failure',
                  body: 'The latest 10-minute run of the API test automation failed. Please check Jenkins for details.'
         }
