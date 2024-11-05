@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { label 'my-ec2-instance' } // Specify the label of your EC2 instance
 
     environment {
         PATH = "$PATH:/home/ubuntu/.nvm/versions/node/v22.11.0/bin"
@@ -7,14 +7,6 @@ pipeline {
     }
 
     stages {
-        stage('Set Permissions') {
-            steps {
-                // Set executable permissions only for npm and node
-                sh 'chmod +x /home/ubuntu/.nvm/versions/node/v22.11.0/bin/npm'
-                sh 'chmod +x /home/ubuntu/.nvm/versions/node/v22.11.0/bin/node'
-            }
-        }
-
         stage('Install Dependencies') {
             steps {
                 // Install dependencies with npm
@@ -22,9 +14,6 @@ pipeline {
                 /home/ubuntu/.nvm/versions/node/v22.11.0/bin/npm install
                 /home/ubuntu/.nvm/versions/node/v22.11.0/bin/npx playwright install
                 '''
-                
-                // Set read/write permissions for the node_modules directory after installation
-                sh 'chmod -R 755 node_modules || true'
             }
         }
 
