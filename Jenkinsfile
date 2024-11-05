@@ -5,6 +5,11 @@ pipeline {
         cron('H/10 * * * *')
     }
 
+    environment {
+        // Add Node.js and npm paths to the pipeline environment
+        PATH = "$PATH:/home/ubuntu/.nvm/versions/node/v22.11.0/bin"
+    }
+
     stages {
         stage('Checkout Code') {
             steps {
@@ -14,8 +19,10 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
-                sh 'npx playwright install'
+                sh '''
+                npm install
+                npx playwright install
+                '''
             }
         }
 
@@ -29,22 +36,20 @@ pipeline {
     post {
         always {
             script {
-                // Archive the Playwright HTML report so it's accessible from Jenkins
+                // Archive HTML report if it exists
                 if (fileExists('test-results/report.html')) {
                     archiveArtifacts artifacts: 'test-results/report.html', allowEmptyArchive: true
                 } else {
                     echo 'No HTML report found to archive.'
                 }
             }
-
-            // Send email with HTML report as an attachment if SMTP is configured
-            emailext (
-                subject: 'API Test Automation Report',
-                body: 'The latest run of the API test automation is complete. See the attached report for details.',
-                attachLog: true,
-                attachmentsPattern: 'test-results/report.html',
-                to: 'bmukund.official@gmail.com'
-            )
+        }
+        
+        always {
+            emailext to: 'bmukund.official@gmail.com',
+                     subject: 'API Test Automation Results',
+                     body: 'The latest 10-minute run of the API test automation has completed. Please check Jenkins for details.',
+                     attachLog: true
         }
     }
 }
