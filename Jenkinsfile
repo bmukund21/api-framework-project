@@ -1,9 +1,15 @@
 pipeline {
     agent {
-        label 'your-ec2-agent' // Replace with the appropriate label for your EC2 instance
+        label 'my-ec2-agent' // Replace with the appropriate label for your EC2 instance
     }
-    tools { nodejs "nodejs10" } // Use the appropriate Node.js version as configured in Jenkins
+    tools { nodejs "22.1.0" } // Use the appropriate Node.js version as configured in Jenkins
     stages {
+        stage('Set Permissions') {
+            steps {
+                // Set permissions for Jenkins user on the ec2-user directory
+                sh 'sudo chmod -R +rw /home/ec2-user/'
+            }
+        }
         stage('Install Dependencies') {
             steps {
                 // Install npm dependencies and Playwright
