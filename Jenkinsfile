@@ -11,8 +11,8 @@ pipeline {
             steps {
                 // Install dependencies with npm
                 sh '''
-                /home/ubuntu/.nvm/versions/node/v22.11.0/bin/npm ci
-                /home/ubuntu/.nvm/versions/node/v22.11.0/bin/npx playwright install
+                npm install
+                npx playwright install
                 '''
             }
         }
@@ -20,7 +20,7 @@ pipeline {
         stage('Run API Tests') {
             steps {
                 // Run the tests using npx playwright test
-                sh '/home/ubuntu/.nvm/versions/node/v22.11.0/bin/npx playwright test'
+                sh 'npx playwright test'
             }
         }
     }
