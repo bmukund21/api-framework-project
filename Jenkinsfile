@@ -9,18 +9,23 @@ pipeline {
     stages {
         stage('Install Dependencies') {
             steps {
-                // Install dependencies with npm
-                sh '''
-                ./venv/bin/activate && npm install
-                npx playwright install
-                '''
+                // Ensure we're in the root directory where package.json is located
+                dir("${WORKSPACE}") {
+                    // Install dependencies with npm
+                    sh '''
+                    /home/ubuntu/.nvm/versions/node/v22.11.0/bin/npm install
+                    /home/ubuntu/.nvm/versions/node/v22.11.0/bin/npx playwright install
+                    '''
+                }
             }
         }
 
         stage('Run API Tests') {
             steps {
                 // Run the tests using npx playwright test
-                sh 'npx playwright test'
+                dir("${WORKSPACE}") {
+                    sh '/home/ubuntu/.nvm/versions/node/v22.11.0/bin/npx playwright test'
+                }
             }
         }
     }
