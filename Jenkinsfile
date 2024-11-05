@@ -1,35 +1,26 @@
 pipeline {
-    agent { label 'my-ec2-instance' } // Specify the label of your EC2 instance
-
-    environment {
-        PATH = "$PATH:/home/ubuntu/.nvm/versions/node/v22.11.0/bin"
-        NPM_CONFIG_CACHE = "${WORKSPACE}/.npm"
+    agent {
+        label 'your-ec2-agent' // Replace with the appropriate label for your EC2 instance
     }
-
+    tools { nodejs "nodejs10" } // Use the appropriate Node.js version as configured in Jenkins
     stages {
         stage('Install Dependencies') {
             steps {
-                // Ensure we're in the root directory where package.json is located
-                dir("${WORKSPACE}") {
-                    // Install dependencies with npm
-                    sh '''
-                    /home/ubuntu/.nvm/versions/node/v22.11.0/bin/npm install
-                    /home/ubuntu/.nvm/versions/node/v22.11.0/bin/npx playwright install
-                    '''
-                }
+                // Install npm dependencies and Playwright
+                sh '''
+                    npm install
+                    npx playwright install
+                '''
             }
         }
 
         stage('Run API Tests') {
             steps {
-                // Run the tests using npx playwright test
-                dir("${WORKSPACE}") {
-                    sh '/home/ubuntu/.nvm/versions/node/v22.11.0/bin/npx playwright test'
-                }
+                // Run tests using npx
+                sh 'npx playwright test'
             }
         }
     }
-
     post {
         always {
             script {
