@@ -43,9 +43,6 @@ pipeline {
                     echo 'No HTML report found to archive.'
                 }
             }
-        }
-        
-        always {
             emailext to: 'bmukund.official@gmail.com',
                      subject: 'API Test Automation Results',
                      body: 'The latest 10-minute run of the API test automation has completed. Please check Jenkins for details.',
