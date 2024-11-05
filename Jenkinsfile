@@ -7,12 +7,6 @@ pipeline {
     }
 
     stages {
-        stage('Checkout Code') {
-            steps {
-                git 'https://github.com/bmukund21/api-framework-project.git'
-            }
-        }
-        
         stage('Install Dependencies') {
             steps {
                 sh '''
