@@ -1,45 +1,47 @@
 pipeline {
-    agent any  // Use any available agent for this job
+    agent any
 
     triggers {
-        cron('H/10 * * * *')  // Trigger the pipeline to run every 10 minutes
+        cron('H/10 * * * *')
     }
 
     stages {
+        stage('Setup Node.js') {
+            steps {
+                sh '''
+                # Install Node.js and npm (Ubuntu example)
+                curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+                sudo apt-get install -y nodejs
+                '''
+            }
+        }
+
         stage('Checkout Code') {
             steps {
-                // Clone the GitHub repository
                 git url: 'https://github.com/bmukund21/api-framework-project.git', branch: 'main'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                script {
-                    // Install project dependencies and Playwright
-                    sh 'npm install'
-                    sh 'npx playwright install'
-                }
+                sh 'npm install'
+                sh 'npx playwright install'
             }
         }
 
         stage('Run API Tests') {
             steps {
-                script {
-                    // Run Playwright tests
-                    sh 'npx playwright test'
-                }
+                sh 'npx playwright test'
             }
         }
     }
 
     post {
         always {
-            // Archive test results if the directory exists
             script {
                 if (fileExists('test-results')) {
                     archiveArtifacts artifacts: 'test-results/**/*.json', allowEmptyArchive: true
-                    junit 'test-results/**/*.xml'  // Publish JUnit results if they exist
+                    junit 'test-results/**/*.xml'
                 } else {
                     echo 'No test results found to archive.'
                 }
@@ -47,8 +49,7 @@ pipeline {
         }
         
         failure {
-            // Send an email notification on test failure
-            mail to: 'bmukund.official@gmail.com',
+            mail to: 'your-email@example.com',
                  subject: 'API Test Automation Failure',
                  body: 'The latest 10-minute run of the API test automation failed. Please check Jenkins for details.'
         }
