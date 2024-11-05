@@ -1,0 +1,23 @@
+{
+  "name": "new-api-setup",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "type": "module",  
+  "license": "ISC",
+  "devDependencies": {
+    "@faker-js/faker": "^9.0.3",
+    "@playwright/test": "^1.48.1",
+    "@types/node": "^22.7.5",
+    "chai": "^5.1.1",
+    "luxon": "^3.5.0",
+    "rimraf": "^6.0.1"
+  },
+  "dependencies": {
+    "playwright": "^1.48.1"
+  }
+  
+}
