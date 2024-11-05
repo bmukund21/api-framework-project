@@ -10,7 +10,7 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 sh '''
-                npm install
+                sudo npm install
                 npx playwright install
                 '''
             }
