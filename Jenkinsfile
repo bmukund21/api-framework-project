@@ -11,7 +11,7 @@ pipeline {
             steps {
                 // Install dependencies with npm
                 sh '''
-                 npm install npm@latest -g
+                ./venv/bin/activate && npm install
                 npx playwright install
                 '''
             }
