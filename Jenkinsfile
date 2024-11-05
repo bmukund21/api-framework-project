@@ -1,22 +1,18 @@
 pipeline {
     agent any
 
-    triggers {
-        cron('H/10 * * * *')
-    }
-
     environment {
-        // Add Node.js and npm paths to the pipeline environment
         PATH = "$PATH:/home/ubuntu/.nvm/versions/node/v22.11.0/bin"
+        NPM_CONFIG_CACHE = "${WORKSPACE}/.npm"
     }
 
     stages {
         stage('Checkout Code') {
             steps {
-                git url: 'https://github.com/bmukund21/api-framework-project.git', branch: 'main'
+                git 'https://github.com/bmukund21/api-framework-project.git'
             }
         }
-
+        
         stage('Install Dependencies') {
             steps {
                 sh '''
@@ -28,7 +24,7 @@ pipeline {
 
         stage('Run API Tests') {
             steps {
-                sh 'npx playwright test'
+                sh 'npm test'
             }
         }
     }
@@ -36,17 +32,15 @@ pipeline {
     post {
         always {
             script {
-                // Archive HTML report if it exists
-                if (fileExists('test-results/report.html')) {
-                    archiveArtifacts artifacts: 'test-results/report.html', allowEmptyArchive: true
+                if (fileExists('report.html')) {
+                    archiveArtifacts artifacts: 'report.html', allowEmptyArchive: true
                 } else {
-                    echo 'No HTML report found to archive.'
+                    echo "No HTML report found to archive."
                 }
             }
             emailext to: 'bmukund.official@gmail.com',
-                     subject: 'API Test Automation Results',
-                     body: 'The latest 10-minute run of the API test automation has completed. Please check Jenkins for details.',
-                     attachLog: true
+                     subject: "Build ${env.BUILD_NUMBER} - ${currentBuild.result}",
+                     body: "Build ${env.BUILD_NUMBER} completed with status: ${currentBuild.result}"
         }
     }
 }
