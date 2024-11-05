@@ -11,7 +11,7 @@ pipeline {
             steps {
                 // Install dependencies with npm
                 sh '''
-                npm install
+                 npm install npm@latest -g
                 npx playwright install
                 '''
             }
