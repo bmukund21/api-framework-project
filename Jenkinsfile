@@ -1,8 +1,8 @@
 pipeline {
     agent {
-        label 'my-ec2-instance' // Replace with the appropriate label for your EC2 instance
+        label 'my-ec2-instance' // label for the EC2 instance
     }
-    tools { nodejs "22.1.0" } // Use the appropriate Node.js version as configured in Jenkins
+    tools { nodejs "22.1.0" } // Node.js version as configured in Jenkins
     stages {
         stage('Set Permissions') {
             steps {
