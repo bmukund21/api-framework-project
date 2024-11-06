@@ -4,16 +4,17 @@ pipeline {
     }
     tools { nodejs "22.1.0" } // Node.js version as configured in Jenkins
     stages {
-        stage('Set Permissions') {
-            steps {
-                // Set permissions for Jenkins user on the ec2-user directory
-                sh 'sudo chmod -R +rw /home/ec2-user/'
-            }
-        }
+        // stage('Set Permissions') {
+        //    steps {
+        //        // Set permissions for Jenkins user on the ec2-user directory
+        //        sh 'sudo chmod -R +rw /home/ec2-user/'
+        //    }
+        //}
         stage('Install Dependencies') {
             steps {
                 // Install npm dependencies and Playwright
                 sh '''
+                    sudo apt install npm
                     npm install
                     npx playwright install
                 '''
