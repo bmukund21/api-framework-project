@@ -14,7 +14,8 @@ pipeline {
             steps {
                 // Install npm dependencies and Playwright
                 sh '''
-                    cd ${JENKINS_HOME}/${JOB_BASE_NAME}
+                    #cd ${JENKINS_HOME}/${JOB_BASE_NAME}
+                    pwd > /tmp/pwd-check
                     npm install
                     npx playwright install
                 '''
